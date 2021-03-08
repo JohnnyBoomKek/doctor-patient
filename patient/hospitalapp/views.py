@@ -13,10 +13,10 @@ from .serializers import PatientSerializer, DocumentSerializer, TreatmentSeriali
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
-    http_method_names = ['get']
+    #http_method_names = ['post', 'get']
 
     def retrieve(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_403_FORBIDDEN) 
+        return Response(status=status.HTTP_404_NOT_FOUND) 
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -24,7 +24,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = Document.objects.all()
         patient = self.request.query_params.get('patient', None)
         if patient is not None:
             queryset = queryset.filter(patient=patient)
@@ -39,7 +39,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
         document = Document.objects.get(id=document_id)
         try:
             document_body_data = DocumentBodySerializer(document.document_body).data 
-            response.data['body'] = document_body_data
+            response.data['body'] = document_body_data['body']
         except:
             response.data['body'] = None
         return response
@@ -61,11 +61,12 @@ class TreatmentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        queryset = self.queryset
+        queryset = Treatment.objects.all()
 
         patient = self.request.query_params.get('patient', None)
         if patient is not None:
             queryset = queryset.filter(patient=patient)
+        print(queryset)
         return queryset
 
     def retrieve(self, request, *args, **kwargs):

@@ -11,7 +11,7 @@ class PatientSerializer(serializers.ModelSerializer):
 
 class DocumentBodySerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
+        fields = ('body',)
         model = DocumentBody
 
 class DocumentSerializer(serializers.ModelSerializer):
